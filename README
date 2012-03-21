@@ -1,1 +1,87 @@
-wibble
+## use classes to replicate drinks being served in a bar
+    
+class Bottle(object):
+    """ Drinks for sale at the bar. """
+    DRINKS = ["Whiskey", "Gin", "Vodka", "Rum"]
+    SIZES = [70, 100, 100, 70]
+    
+    def __init__(self, drink):
+        self.drink = drink
+        
+    def __str__(self):
+        wibble = self.drink
+        return wibble
+    
+class MyBar(object):
+    """ A fully stocked bar with no bottles or drinks. """
+    def __init__(self, name):
+        self.bottles = []
+        self.name = name
+
+    def __str__(self):
+        if self.bottles != []:
+            rep = ""
+            for bottle in self.bottles:
+                rep += str(bottle) + " "
+        else:
+            rep = "<empty>"
+        return rep
+    
+    def add(self, bottle):
+##        adds the bottle/drink combo to the the bottles list
+        self.bottles.append(bottle)
+        
+    def remove2(self, bottle):
+##        opposite of the above except there doesn't seem to be anything to remove, the list is empty
+        self.bottles.remove(bottle)
+
+class FullBottles(MyBar):
+    """ Create a bar full of drinks. """
+    def stock(self):
+        for drink in Bottle.DRINKS:
+            # uses the index number of each SIZES element to join with
+            # corresponding DRINKS element
+            capacity = Bottle.SIZES[Bottle.DRINKS.index(drink)]
+            new_bottle = drink + " " + str(capacity)
+            self.add(Bottle(new_bottle))
+            
+    def serving(self, measure):
+        drink_size = 25
+        open_bottle = Bottle.DRINKS[measure-1] + " " + str(Bottle.SIZES[measure-1] - drink_size)
+        closed_bottle = Bottle.DRINKS[measure-1] + " " + str(Bottle.SIZES[measure-1])
+##        below are 3 different things I have tried in order to get this to work
+#        Bottle.SIZES[measure-1] = open_bottle
+#        self.remove2(Bottle(closed_bottle))
+#        self.add(Bottle(open_bottle))
+        return closed_bottle
+        
+def main():
+    bar_name = input("What are you going to call your bar?\n")
+    bar = FullBottles(bar_name)
+    bar.stock()
+    print("\nWelcome to The", bar.name)
+    print("\nYour bar has the following stock: ", bar)
+    
+    choice = None
+    while choice != "0":
+        print("""\nWhat drink would you like?
+                0 - Leave the bar
+                1 - Whiskey
+                2 - Gin
+                3 - Vodka
+                4 - Rum
+                """)
+        choice = input("Drink: ")
+        print()
+        
+        ## exit option
+        if choice == "0":
+            print("Have a nice day y'all")
+            
+        elif choice == "1":
+            print("\nOne Whiskey coming right up")
+            cust_drink = 1
+            print(bar.serving(cust_drink))
+#            print(bar.stock())
+
+main()
